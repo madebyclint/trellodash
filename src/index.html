@@ -1,0 +1,45 @@
+<!doctype html public="♥">
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <title>TrelloDash</title>
+    <meta name="description" content="IdeaVetter">
+    <meta name="viewport" content="width=device-width">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&amp;lang=en" rel="stylesheet">
+
+    <!-- This is <%- env %>. -->
+
+    <!-- Load css via grunt template -->
+    <link rel="stylesheet" href="<%= css %>">
+
+    <!-- Load head scripts via grunt template -->
+    <%= jshead %>
+</head>
+
+<body data-env="<%- env %>">
+    <div id="main">
+
+        <div id="loggedout">
+            <a id="connectLink" href="#">Connect To Trello</a>
+        </div>
+
+        <div id="loggedin">
+            <div id="header">
+                Logged in to as <span id="fullName"></span> 
+                <a id="disconnect" href="#">Log Out</a>
+            </div>
+
+            <div id="content">
+                <div id="boards"></div>
+                <div id="cards"></div>
+            </div>
+
+            <div id="output"></div>
+        </div>
+        
+    </div>
+    <%= jsfoot %>
+</body>
+
+</html>

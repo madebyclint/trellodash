@@ -1,0 +1,73 @@
+//*==========  Basics  ==========*/
+
+.font-0 { font-size: $font-size-0 !important; }
+.font-1 { font-size: $font-size-1 !important; }
+.font-2 { font-size: $font-size-2 !important; }
+.font-3 { font-size: $font-size-3 !important; }
+.font-4 { font-size: $font-size-4 !important; }
+.font-5 { font-size: $font-size-5 !important; }
+.font-6 { font-size: $font-size-6 !important; }
+
+
+body {
+    font-family: arial;
+    font-size: 12px;
+    background-color: $blue;
+}
+
+//*==========  Components  ==========*/
+
+#loggedout {
+    text-align: center;
+    font-size: 20px;
+    padding-top: 30px;
+}
+#loggedin { 
+    display: none; 
+}
+
+#header {
+    padding: 4px;
+    border-bottom: 1px solid #000;
+    background: #eee;
+}
+
+#output {
+    padding: 4px;
+}
+
+#content {
+    display: flex;
+}
+
+
+//*==========  Boards  ==========*/
+
+#boards {
+    // display: flex;
+    max-width: 25%;
+}
+
+.board {
+    @extend %block;
+
+    h2 {
+        font-size: $font-size-4;
+        padding: 0;
+        margin: 0;
+    }
+
+    &.closed {
+        @include disabled($blue, $white);
+    }
+}
+
+
+//*==========  Cards  ==========*/
+
+.card { 
+    display: block; 
+    padding: 2px;
+    background-color: #E2E4E6;
+    margin: 1rem;
+}
