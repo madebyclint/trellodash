@@ -15,6 +15,15 @@ body {
     background-color: $blue;
 }
 
+//*==========  Placeholders  ==========*/
+
+%block {
+    display: block;
+    border: 1px solid $white;
+    padding: .5rem;
+    margin: .5rem;
+}
+
 //*==========  Components  ==========*/
 
 #loggedout {
@@ -48,7 +57,7 @@ body {
     max-width: 25%;
 }
 
-.board {
+.board, .list, .card {
     @extend %block;
 
     h2 {
@@ -62,12 +71,18 @@ body {
     }
 }
 
+.active {
+    .board, .list, .card {
+        background-color: $gray-1;
+    }
+}
+
 
 //*==========  Cards  ==========*/
 
-.card { 
-    display: block; 
-    padding: 2px;
-    background-color: #E2E4E6;
-    margin: 1rem;
-}
+// .card { 
+//     display: block; 
+//     padding: 2px;
+//     background-color: #E2E4E6;
+//     margin: 1rem;
+// }

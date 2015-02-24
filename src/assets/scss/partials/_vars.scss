@@ -39,17 +39,6 @@ $font-size-6: 10px;
     color: $color;
 }
 
-
-//*==========  Placeholders  ==========*/
-
-%block {
-    display: block;
-    border: 1px solid #fff;
-    padding: .5rem;
-    margin: .5rem;
-}
-
-
 //*==========  Mixins  ==========*/
 @mixin disabled($base-color, $text-color) {
     background-color: darken($base-color, 15%);
