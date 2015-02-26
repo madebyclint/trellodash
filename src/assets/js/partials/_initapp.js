@@ -35,10 +35,10 @@
         var el = document.createElement('div');
         var title = document.createElement('h2');
         var classes = [ className ];
-        var isAllLink = (className === 'all' ? true : false);
+        // var isAllLink = (className === 'all' ? true : false);
 
         // Build elWrap
-        elWrap.href = '#' + (isAllLink ? 'all' : item.id);
+        elWrap.href = '#' + item.id;
         elWrap.className = className + '-link';
 
         // Create arr of classes
@@ -48,7 +48,7 @@
         // Append classes to element
         el.className = classes.join(' ');
         
-        title.textContent = (isAllLink ? 'All' : item.name);
+        title.textContent = item.name;
         el.appendChild(title);
 
         elWrap.appendChild(el);
@@ -134,6 +134,7 @@
     var AllItems = (function() {
       var getAll = function(boardsIds) {
         var getUrls = [];
+        var allcards = [];
         boardsIds.map(function(item) {
             // getUrls.push('/boards/' + item + '?lists=all');
             getUrls.push('/boards/' + item + '?cards=all');
@@ -144,24 +145,27 @@
           // });
         });
         var batchUrl = 'batch/?urls=' + getUrls.join(',');
-        console.log(batchUrl);
+        var cardsId = document.getElementById('cards');
+        cardsId.innerHTML = '';
         Trello.get(batchUrl, function(batch) {
           batch.map(function(item) {
-            buildCards(item[200]);
+            Array.prototype.push.apply(allcards, buildCards(item[200]));
+          });
+          allcards.map(function(item) {
+            cardsId.appendChild(item);
           });
         });
       };
-      var buildCards = function(cards) {
-        console.log(cards);
-        cards = cards.cards;
+      var buildCards = function(board) {
+        var cards = board.cards;
         if(cards.length >= 0) {
-          var cardLink, cardsId = document.getElementById('cards');
-          cardsId.innerHTML = '';
+          var cardLinks = [];
           cards.map(function(card) {
-            cardLink = Helpers.buildLink(card, 'card');
-            cardsId.appendChild(cardLink);
-            EventBinders.clicked(cardLink, Cards.getCards, card.id);
+            cardLinks.push(Helpers.buildLink(card, 'card'));
           });
+          // cardsId.appendChild(cardLink);
+          //   EventBinders.clicked(cardLink, Cards.getCards, card.id);
+          return cardLinks;
         }
       };
 
@@ -196,7 +200,7 @@
               listsId = document.getElementById('lists'),
               cardsId = document.getElementById('cards');
           listsId.innerHTML = '';
-          cardsId.innerHTML = '';
+          // cardsId.innerHTML = '';
           lists.map(function(list) {
             listLink = Helpers.buildLink(list, 'list');
             listsId.appendChild(listLink);
