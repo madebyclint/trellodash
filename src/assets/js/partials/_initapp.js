@@ -35,9 +35,10 @@
         var el = document.createElement('div');
         var title = document.createElement('h2');
         var classes = [ className ];
+        var isAllLink = (className === 'all' ? true : false);
 
         // Build elWrap
-        elWrap.href = '#' + item.id;
+        elWrap.href = '#' + (isAllLink ? 'all' : item.id);
         elWrap.className = className + '-link';
 
         // Create arr of classes
@@ -47,7 +48,7 @@
         // Append classes to element
         el.className = classes.join(' ');
         
-        title.textContent = item.name;
+        title.textContent = (isAllLink ? 'All' : item.name);
         el.appendChild(title);
 
         elWrap.appendChild(el);
@@ -102,21 +103,70 @@
       var buildBoards = function(boards) {
         if(boards.length >= 0) {
           var boardLink,
+              allBoardsLink,
+              boardsIds = [],
               boardsId = document.getElementById('boards'),
               listsId = document.getElementById('lists'),
               cardsId = document.getElementById('cards');
           boardsId.innerHTML = '';
           listsId.innerHTML = '';
           cardsId.innerHTML = '';
+
+          // Create list of boards
           boards.map(function(board) {
+            boardsIds.push(board.id);
             boardLink = Helpers.buildLink(board, 'board');
             boardsId.appendChild(boardLink);
             EventBinders.clicked(boardLink, Lists.getLists, board.id);
           });
+
+          // Create All link
+          allBoardsLink = '<a href="#all" class="allLink"><div class="board"><h2>All Boards</h2></div></a>';
+          boardsId.innerHTML = allBoardsLink + boardsId.innerHTML;
+          EventBinders.clicked(document.querySelector('.allLink'), AllItems.getAll, boardsIds);
         }
       };
       return {
         getBoards: getBoards
+      };
+    }());
+
+    var AllItems = (function() {
+      var getAll = function(boardsIds) {
+        var getUrls = [];
+        boardsIds.map(function(item) {
+            // getUrls.push('/boards/' + item + '?lists=all');
+            getUrls.push('/boards/' + item + '?cards=all');
+          // Trello.get('boards/' + boardId + '?lists=all&cards=all', function(lists) {
+          //   console.log('api called');
+          //   buildLists(lists);
+          //   listCache[boardId] = lists;
+          // });
+        });
+        var batchUrl = 'batch/?urls=' + getUrls.join(',');
+        console.log(batchUrl);
+        Trello.get(batchUrl, function(batch) {
+          batch.map(function(item) {
+            buildCards(item[200]);
+          });
+        });
+      };
+      var buildCards = function(cards) {
+        console.log(cards);
+        cards = cards.cards;
+        if(cards.length >= 0) {
+          var cardLink, cardsId = document.getElementById('cards');
+          cardsId.innerHTML = '';
+          cards.map(function(card) {
+            cardLink = Helpers.buildLink(card, 'card');
+            cardsId.appendChild(cardLink);
+            EventBinders.clicked(cardLink, Cards.getCards, card.id);
+          });
+        }
+      };
+
+      return {
+        getAll: getAll
       };
     }());
 
@@ -198,55 +248,17 @@
     var DomTouch = (function() {
     }());
 
+
+
+
+
+
+
     var onAuthorize = function() {
         updateLoggedIn();
         $("#output").empty();
 
         Boards.getBoards();
-
-        return false;
-        
-        // Trello.members.get("me", function(member){
-        //     $("#fullName").text(member.fullName);
-          
-        //     var boardNames = {};
-          
-        //     Trello.get("members/my/boards", function(boards) {
-        //         $.each(boards, function(ix, board) {
-        //           boardNames[board.id] = board.name;
-        //         }); 
-              
-        //       return Cards(boardNames);
-        //     });
-        
-
-        //     var Cards = function(boardNames) {
-        //       var $cards = $("<div>")
-        //           .text("Loading Cards...")
-        //           .appendTo("#output");
-              
-        //       // Output a list of all of the cards that the member 
-        //       // is assigned to
-        //       Trello.get("members/me/cards", function(cards) {
-        //           $cards.empty();
-        //           $cards.html("<h2>Cards</h2>");
-        //           var cardDate, isBoard;
-        //           $.each(cards, function(ix, card) {
-        //               cardDate = new Date(card.due);                
-        //               $("<a>")
-        //               .attr({href: card.url, target: "trello"})
-        //               .addClass("card")
-        //               .html("<p><strong>" + card.name + 
-        //                     "</strong><br>" + cardDate + "<br>" +
-        //                     card.labels.map(function(item) {
-        //                       return item.name;
-        //                     }) + "<br>Board: " + boardNames[card.idBoard] + 
-        //                     "</p>")
-        //               .appendTo($cards);
-        //           });  
-        //       });
-        //     };
-        // });
 
     };
 
