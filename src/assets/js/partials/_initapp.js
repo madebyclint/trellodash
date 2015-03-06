@@ -34,8 +34,11 @@
         var elWrap = document.createElement('a');
         var el = document.createElement('div');
         var title = document.createElement('h2');
+        var labels = document.createElement('div');
         var classes = [ className ];
         // var isAllLink = (className === 'all' ? true : false);
+
+        console.log('obj', item);
 
         // Build elWrap
         elWrap.href = '#' + item.id;
@@ -47,9 +50,23 @@
         }
         // Append classes to element
         el.className = classes.join(' ');
-        
-        title.textContent = item.name;
-        el.appendChild(title);
+
+        // Add information to element
+        if(item.name) {
+          title.textContent = item.name;
+          el.appendChild(title);
+        }
+
+        if(item.labels) {
+          labels.className = 'labels';
+          item.labels.map(function(subitem) {
+            var subel = document.createElement('p');
+            subel.className = 'label-' + subitem.color;
+            subel.textContent = subitem.name;
+            labels.appendChild(subel);
+          });
+          el.appendChild(labels);
+        }
 
         elWrap.appendChild(el);
         
@@ -136,13 +153,7 @@
         var getUrls = [];
         var allcards = [];
         boardsIds.map(function(item) {
-            // getUrls.push('/boards/' + item + '?lists=all');
             getUrls.push('/boards/' + item + '?cards=all');
-          // Trello.get('boards/' + boardId + '?lists=all&cards=all', function(lists) {
-          //   console.log('api called');
-          //   buildLists(lists);
-          //   listCache[boardId] = lists;
-          // });
         });
         var batchUrl = 'batch/?urls=' + getUrls.join(',');
         var cardsId = document.getElementById('cards');
@@ -163,8 +174,6 @@
           cards.map(function(card) {
             cardLinks.push(Helpers.buildLink(card, 'card'));
           });
-          // cardsId.appendChild(cardLink);
-          //   EventBinders.clicked(cardLink, Cards.getCards, card.id);
           return cardLinks;
         }
       };
